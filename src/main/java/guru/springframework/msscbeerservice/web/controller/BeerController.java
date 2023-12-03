@@ -2,7 +2,6 @@ package guru.springframework.msscbeerservice.web.controller;
 
 import guru.springframework.msscbeerservice.web.model.BeerDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,14 +25,14 @@ public class BeerController {
         return new ResponseEntity<>(BeerDto.builder().build(), OK);
     }
 
-    @PostMapping
-    public ResponseEntity saveNewBeer(@RequestBody BeerDto beerDto) {
-        return new ResponseEntity(CREATED);
+    @PostMapping("/")
+    public ResponseEntity<BeerDto> saveNewBeer(@RequestBody BeerDto beerDto) {
+        return new ResponseEntity<>(CREATED);
     }
 
     @PutMapping("/{beerId}")
-    public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beerDto) {
+    public ResponseEntity<BeerDto> updateBeerById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beerDto) {
 
-        return new ResponseEntity(NO_CONTENT);
+        return new ResponseEntity<>(NO_CONTENT);
     }
 }
