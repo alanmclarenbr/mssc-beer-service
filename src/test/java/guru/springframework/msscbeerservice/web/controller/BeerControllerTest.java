@@ -1,17 +1,21 @@
 package guru.springframework.msscbeerservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import guru.springframework.msscbeerservice.web.enums.BeerStyleEnum;
+import guru.springframework.msscbeerservice.bootstrap.BeerLoader;
+import guru.springframework.msscbeerservice.services.BeerService;
 import guru.springframework.msscbeerservice.web.model.BeerDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 import static guru.springframework.msscbeerservice.web.enums.BeerStyleEnum.ALE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,6 +32,9 @@ class BeerControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @MockBean
+    BeerService beerService;
+
     @Test
     void getBeerById() throws Exception {
         mockMvc.perform(get(API_V1_BEER + UUID.randomUUID())
@@ -38,6 +45,7 @@ class BeerControllerTest {
 
     @Test
     void saveNewBeer() throws Exception {
+        when(beerService.saveNewBeer(any(BeerDto.class))).thenReturn(getValidBeerDto());
         BeerDto beerDto = getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
@@ -49,6 +57,7 @@ class BeerControllerTest {
 
     @Test
     void updateBeer() throws Exception {
+        when(beerService.updateBeerById(any(UUID.class), any(BeerDto.class))).thenReturn(getValidBeerDto());
         BeerDto beerDto = getValidBeerDto();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
@@ -63,8 +72,7 @@ class BeerControllerTest {
                 .beerName("My Beer")
                 .beerStyle(ALE)
                 .price(BigDecimal.valueOf(2.99))
-                .upc(123123123123L)
+                .upc(BeerLoader.BEER_1_UPC)
                 .build();
-
     }
 }
